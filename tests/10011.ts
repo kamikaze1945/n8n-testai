@@ -1,4 +1,3 @@
-```typescript
 import { test, expect } from '@playwright/test';
 
 test('Login form validation', async ({ page }) => {
@@ -41,4 +40,3 @@ test('Login form validation', async ({ page }) => {
   await expect(page).toHaveURL('https://www.example.com/dashboard');
   await expect(page.getByText('Welcome, User')).toBeVisible();
 });
-```
