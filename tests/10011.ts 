@@ -1,0 +1,44 @@
+```typescript
+import { test, expect } from '@playwright/test';
+
+test('Logowanie - walidacja', async ({ page }) => {
+  // Otwarcie strony logowania
+  await page.goto('https://example.com/login');
+  
+  // Sprawdzenie, czy strona logowania jest dostępna
+  await expect(page).toHaveTitle(/Login/);
+  
+  // Kliknięcie przycisku zaloguj bez wypełniania pól
+  await page.getByRole('button', { name: 'Zaloguj' }).click();
+  
+  // Sprawdzenie czy wyświetla się komunikat o braku wypełnienia pól
+  await expect(page.locator('.error-message')).toBeVisible();
+  await expect(page.locator('.error-message')).toContainText('Proszę wypełnić wszystkie wymagane pola');
+  
+  // Wprowadzenie tylko loginu bez hasła
+  await page.getByLabel('Login').fill('testuser');
+  await page.getByRole('button', { name: 'Zaloguj' }).click();
+  
+  // Sprawdzenie czy wyświetla się komunikat o braku hasła
+  await expect(page.locator('.error-message')).toBeVisible();
+  await expect(page.locator('.error-message')).toContainText('Proszę podać hasło');
+  
+  // Wprowadzenie tylko hasła bez loginu
+  await page.getByLabel('Login').clear();
+  await page.getByLabel('Hasło').fill('password123');
+  await page.getByRole('button', { name: 'Zaloguj' }).click();
+  
+  // Sprawdzenie czy wyświetla się komunikat o braku loginu
+  await expect(page.locator('.error-message')).toBeVisible();
+  await expect(page.locator('.error-message')).toContainText('Proszę podać login');
+  
+  // Wprowadzenie niepoprawnych danych
+  await page.getByLabel('Login').fill('niepoprawnylogin');
+  await page.getByLabel('Hasło').fill('niepoprawnehaslo');
+  await page.getByRole('button', { name: 'Zaloguj' }).click();
+  
+  // Sprawdzenie czy wyświetla się komunikat o niepoprawnych danych logowania
+  await expect(page.locator('.error-message')).toBeVisible();
+  await expect(page.locator('.error-message')).toContainText('Niepoprawny login lub hasło');
+});
+```
